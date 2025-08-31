@@ -1,4 +1,4 @@
-name: Deploy ZIP to GitHub Pages
+name: Deploy ZIP to GitHub Pages 
 
 on:
   push:
