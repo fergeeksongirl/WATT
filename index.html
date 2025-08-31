@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>WATTs — v2.14</title>
+<title>WATTs — v2.15</title>
 <style>
   :root { --accent:#0ea5e9; --ink:#0f172a; --muted:#64748b; --line:#e5e7eb; --ok:#16a34a; --done:#4ade80; }
   * { box-sizing:border-box; }
@@ -62,7 +62,7 @@
 
 </style>
 </head>
-<body data-build-version='v2.14' data-build-time='2025-08-31 20:02:38Z'>
+<body data-build-version='v2.15' data-build-time='2025-08-31 20:26:29Z'>
 <header class="brand">
   <div class="wrap">
     <div style="font-weight:700; font-size:20px;">WATTs • Workforce Assessment for Transition & Talent</div>
@@ -83,7 +83,23 @@
       <p class="muted">Placeholder for your pre‑intro text. This short overview will explain the purpose, how your answers are used, privacy notes, and what to expect.</p>
       <hr>
       <label for="path"><strong>Choose a pathway to begin:</strong></label>
-      <select id="path" name="path" class="pathway-select"></select>
+      <select id="path" name="path" class="pathway-select">
+<option value="" selected>&lt;- Select Pathway -&gt;</option>
+<option value="Emissions Measurement Professional">Emissions Measurement Professional</option>
+<option value="Energy Services Labourers & Operators">Energy Services Labourers & Operators</option>
+<option value="Engineer \u2014 Electrical/Instrumentation">Engineer \u2014 Electrical/Instrumentation</option>
+<option value="Engineer \u2014 Mechanical">Engineer \u2014 Mechanical</option>
+<option value="Engineer \u2014 Process/Chemical">Engineer \u2014 Process/Chemical</option>
+<option value="Environment, Health & Safety Professional">Environment, Health & Safety Professional</option>
+<option value="External Relations Advisor">External Relations Advisor</option>
+<option value="Facility & Process Operator">Facility & Process Operator</option>
+<option value="Geoscientist">Geoscientist</option>
+<option value="Inspection & Testing Technician">Inspection & Testing Technician</option>
+<option value="Sustainability Professional">Sustainability Professional</option>
+<option value="Technologist">Technologist</option>
+<option value="Truck Driver">Truck Driver</option>
+<option value="weights">weights</option>
+</select>
       <div class="toolbar" style="margin-top:10px">
         <button id="start" class="primary" disabled aria-disabled="true">Start Assessment</button>
         <button id="overviewBtn" class="secondary" disabled aria-disabled="true" aria-haspopup="dialog" aria-controls="modal" aria-expanded="false">Pathway Overview</button>
