@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Career Pathways — All-in-one (Multipath v12)</title>
 <link rel="icon" href="/mnt/data/favicon.jpeg">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
 <style>
   :root { --accent:#0ea5e9; --ink:#0f172a; --muted:#64748b; --line:#e5e7eb; --brand:#E7C74D; --ink2:#1f2937; --ok:#16a34a; --done:#4ade80; }
   body { font-family: -apple-system, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 0; color: var(--ink); }
@@ -16,7 +18,7 @@
   .container { max-width: 1140px; margin:0 auto; padding:16px; }
   h1 { margin: 8px 0 6px; }
   .notice { background:#fff4ce; border:1px solid #e0c46c; padding:10px 12px; border-radius:8px; max-width:980px; }
-  .support { background:#fdf6e3; border:1px solid #eed49f; padding:12px 14px; border-radius:10px; max-width:980px; }
+  .support { background:#f5f5f5; border-left:6px solid #333; padding:12px 14px; border-radius:10px; max-width:980px; }
   .card { border:1px solid var(--line); border-radius:10px; padding:16px; margin:14px 0; }
   .likert { display:grid; grid-template-columns: 1fr 260px; gap:10px; align-items:center; margin: 6px 0; }
   select, button { padding:10px; border-radius:8px; border:1px solid #cbd5e1; font-size:16px; }
@@ -56,30 +58,30 @@
 </style>
 </head>
 <body>
-<a href="#main" class="skip">Skip to survey</a>
-<header class="brand" role="banner">
+<header class="brand">
   <div class="wrap">
-    <img src="/mnt/data/CLBanner6_1.4213f2a8.jpeg" alt="Creative Links Inc — Linking People to Solutions and Results">
-    <div>
-      <div style="font-weight:700; font-size:20px;">Career Pathways — Interactive Assessment</div>
-      <div style="font-size:12px; opacity:.85;">Build: 2025-08-31 04:03:07Z</div>
-    </div>
+    <div style="font-weight:700; font-size:20px;">WATTs • Workforce Assessment for Transition &amp; Talent</div>
+    <div class="sub">Build: 2025-08-31 19:45:00Z</div>
   </div>
 </header>
 <div class="container">
   <header>
-    <h1 id="pageTitle">All-in-one Assessment</h1>
-    <p class="notice">
-      Use the stepper to move from <em>Intro</em> → <em>Section 1</em> → <em>Section 2</em> → <em>Section 3</em> → <em>Results</em>. 
-      The printed PDF includes a compact list of your questions & responses.
-    </p>
-    <p class="support" role="note">
-      <strong>Need a hand?</strong> Reflection can sometimes spark questions—that’s part of the process. 
-      If you’d like support as you complete this survey, please reach out to the Creative Links team via 
-      <a href="https://creativelinks.ca/ContactUs/" target="_blank" rel="noopener">our contact page</a>.
-    </p>
+    <h1 id="pageTitle">WATTs • Interactive Skills Assessment</h1>
   </header>
+<!-- Always-visible support box ABOVE landing -->
+<section id="supportBox" class="card support" aria-label="Support">
+<div style="background-color:#F5F5F5; border-left:6px solid #333; padding:1em; margin:1.5em 0; font-family:Arial, sans-serif; color:#222;">
+  <h2 style="font-size:1.2em; margin-top:0;"><span style="color: Tomato;"><i class="fa-solid fa-circle-question fa-xl"></i></span> We’re Here to Help</h2>
+  <p>If you have any questions or run into issues while completing the <strong>WATTs Assessment</strong>, contact the <strong>Creative Links </strong>team for support.</p>
+  <div style="text-align:right;">
+    <a href="mailto:pks@creativelinks.ca?subject=Support%20Request%20-%20WATTs%20App" 
+       style="display:inline-block; background-color:#004080; color:#FFF; padding:0.6em 1.2em; text-decoration:none; font-weight:bold; border-radius:4px; margin-top:0.5em;">
+       SUPPORT 🛟
+    </a>
+  </div>
+</div>
 
+</section>
   <main id="main">
     <section id="landing" class="card" aria-labelledby="landingTitle">
       <div class="step">Start — choose a pathway</div>
@@ -90,8 +92,8 @@
       <select id="path" name="path" aria-describedby="landingHelp"></select>
       <p id="landingHelp" class="sr-only">After selecting a pathway, press Start Assessment to see the skills survey for that pathway.</p>
       <div class="toolbar" style="margin-top:10px">
-        <button id="start" class="primary">Start Assessment</button>
-        <button id="overviewBtn" class="secondary" aria-haspopup="dialog" aria-controls="modal" aria-expanded="false">Pathway Overview</button>
+        <button id="start" class="primary" disabled>Start Assessment</button>
+        <button id="overviewBtn" class="secondary" aria-haspopup="dialog" aria-controls="modal" aria-expanded="false" disabled>Pathway Overview</button>
       </div>
     </section>
 
@@ -355,14 +357,18 @@ document.getElementById('backdrop').addEventListener('click', closeModal);
 
 document.getElementById('start').addEventListener('click', ()=>{
   const name = document.getElementById('path').value;
+  if(!name){ alert('Please select a pathway to begin.'); return; }
   setIntro(name);
   renderSurvey(name);
   toggleOverviewButton();
 });
+
 document.getElementById('overviewBtn').addEventListener('click', ()=>{
   const name = document.getElementById('path').value;
+  if(!name) return;
   if(OVERVIEWS[name]) openModal(OVERVIEWS[name]);
 });
+
 document.getElementById('toS2').addEventListener('click', ()=>{ qs('#sec1Wrap').classList.add('hidden'); qs('#sec2Wrap').classList.remove('hidden'); setStep(3); window.scrollTo({top:qs('#sec2Wrap').offsetTop-20,behavior:'smooth'}); });
 document.getElementById('toS3').addEventListener('click', ()=>{ qs('#sec2Wrap').classList.add('hidden'); qs('#sec3Wrap').classList.remove('hidden'); setStep(4); window.scrollTo({top:qs('#sec3Wrap').offsetTop-20,behavior:'smooth'}); });
 document.getElementById('calc').addEventListener('click', computeResults);
@@ -398,20 +404,43 @@ function resetAnswers(){
 document.getElementById('resetBtn').addEventListener('click', resetAnswers);
 document.getElementById('resetAnswers').addEventListener('click', resetAnswers);
 
+// Enable/disable Start + Overview based on selection
 function toggleOverviewButton(){
   const name = document.getElementById('path').value;
-  const btn = document.getElementById('overviewBtn');
-  if(OVERVIEWS[name]){ btn.classList.remove('hidden'); } else { btn.classList.add('hidden'); }
+  const start = document.getElementById('start');
+  const overview = document.getElementById('overviewBtn');
+  const has = !!name;
+  start.disabled = !has;
+  overview.disabled = !has || !OVERVIEWS[name];
 }
 
+// Init: add placeholder and populate A→Z
 (function init(){
   const pathSel = document.getElementById('path');
-  Object.keys(DATA).forEach(k=>{
-    const o=document.createElement('option'); o.value=k; o.textContent=k; pathSel.appendChild(o);
+
+  // Clear existing options (safety)
+  while (pathSel.firstChild) pathSel.removeChild(pathSel.firstChild);
+
+  // Placeholder (default)
+  const placeholder = document.createElement('option');
+  placeholder.value = "";
+  placeholder.textContent = "<– Select Pathway –>";
+  placeholder.selected = true;
+  placeholder.disabled = true;
+  pathSel.appendChild(placeholder);
+
+  // Add pathways (alphabetical)
+  Object.keys(DATA).sort((a,b)=>a.localeCompare(b)).forEach(k=>{
+    const o = document.createElement('option');
+    o.value = k;
+    o.textContent = k;
+    pathSel.appendChild(o);
   });
-  pathSel.value = Object.keys(DATA)[0];
+
+  pathSel.addEventListener('change', toggleOverviewButton);
   toggleOverviewButton();
 })();
+
 </script>
 </body>
 </html>
