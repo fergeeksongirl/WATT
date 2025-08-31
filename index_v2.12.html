@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WATTs • Interactive Skills Assessment</title>
+<style>
+  :root { --accent:#0ea5e9; --ink:#0f172a; --muted:#64748b; --line:#e5e7eb; --ok:#16a34a; --done:#4ade80; }
+  * { box-sizing:border-box; }
+  body { font-family: -apple-system, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin:0; color:var(--ink);}
+  header.brand { background:#0f1845; color:#fff; }
+  header.brand .wrap { max-width:1140px; margin:0 auto; padding:10px 16px; }
+  header.brand .sub { opacity:.85; font-size:12px; }
+  .container { max-width:1140px; margin:0 auto; padding:16px; }
+  .card { border:1px solid var(--line); border-radius:10px; padding:16px; margin:14px 0; background:#fff; }
+  .step { font-size:12px; color:var(--muted); margin-bottom:6px; }
+  .toolbar { display:flex; gap:10px; flex-wrap:wrap; }
+  select, button { padding:10px; border-radius:8px; border:1px solid #cbd5e1; font-size:16px; }
+  button.primary { background:var(--accent); color:white; border-color:var(--accent); }
+  button.secondary { background:white; color:var(--accent); border-color:var(--accent); }
+  .likert { display:grid; grid-template-columns: 1fr 260px; gap:10px; align-items:center; margin:6px 0; }
+  .likert select { width:100%; }
+  .kpis { display:grid; grid-template-columns: repeat(3,1fr); gap:12px; }
+  .kpis .box { background:#f1f5f9; border:1px solid #e2e8f0; border-radius:8px; padding:12px; }
+  .pill { padding: 4px 8px; border:1px solid #cbd5e1; border-radius:999px; display:inline-block; margin: 2px 6px 2px 0; }
+  .hidden { display:none; }
+  .stepper ol { list-style:none; display:flex; gap:8px; padding:0; margin:0; flex-wrap:wrap; }
+  .stepper li { display:flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid var(--line); border-radius:999px; color:var(--muted); }
+  .stepper li .num { width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; background:#e2e8f0; font-size:12px; }
+  .stepper li.active { border-color: var(--accent); color: var(--ink); }
+  .stepper li.active .num { background: var(--accent); color:white; }
+  .stepper li.done { border-color: var(--done); color: var(--ink); }
+  .stepper li.done .num { background: var(--done); color:#064e3b; }
+  #path { width:100%; max-width:100%; }
+  .muted { color:var(--muted); }
+  /* Mobile tweaks */
+  @media (max-width:768px) {
+    .container { padding:12px; }
+    .likert { grid-template-columns: 1fr; }
+    .kpis { grid-template-columns: 1fr; }
+    select, button { font-size:18px; padding:12px; }
+    h2 { font-size:1.2rem; }
+  }
+  /* Sticky Next appears only during sections (not landing) */
+  @media (min-width:769px) { #stickyBar { display:none !important; } }
+  @media print {
+    header, #landing, .stepper, .toolbar, #survey, #results { display:none !important; }
+    #summary { display:block !important; border:none; }
+  }
+</style>
+</head>
+<body>
+<header class="brand">
+  <div class="wrap">
+    <div style="font-weight:700; font-size:20px;">WATTs • Workforce Assessment for Transition & Talent</div>
+    <div class="sub">Build: 2025-08-31 18:59:30Z</div>
+  </div>
+</header>
+
+<div class="container">
+  <header>
+    <h1>WATTs • Interactive Skills Assessment</h1>
+  </header>
+
+  <main id="main">
+    <!-- Landing -->
+    <section id="landing" class="card" aria-labelledby="landingTitle">
+      <div class="step">Start — choose a pathway</div>
+      <h2 id="landingTitle">Welcome</h2>
+      <p class="muted">Placeholder for your pre‑intro text. This short overview will explain the purpose, how your answers are used, privacy notes, and what to expect.</p>
+      <hr>
+      <label for="path"><strong>Choose a pathway to begin:</strong></label>
+      <select id="path" name="path" class="pathway-select"></select>
+      <div class="toolbar" style="margin-top:10px">
+        <button id="start" class="primary" disabled aria-disabled="true">Start Assessment</button>
+        <button id="overviewBtn" class="secondary" disabled aria-disabled="true" aria-haspopup="dialog" aria-controls="modal" aria-expanded="false">Pathway Overview</button>
+      </div>
+    </section>
+
+    <!-- Stepper -->
+    <section id="workflow" class="stepper hidden" aria-label="Survey steps">
+      <ol>
+        <li id="st1" class="active"><span class="num">1</span><span>Intro</span></li>
+        <li id="st2"><span class="num">2</span><span>Section 1</span></li>
+        <li id="st3"><span class="num">3</span><span>Section 2</span></li>
+        <li id="st4"><span class="num">4</span><span>Section 3</span></li>
+        <li id="st5"><span class="num">5</span><span>Results</span></li>
+      </ol>
+    </section>
+
+    <!-- Intro (What & How) -->
+    <section id="intro" class="card hidden" aria-labelledby="introTitle">
+      <h2 id="introTitle" class="sr-only">Survey — What & How</h2>
+      <div class="toolbar">
+        <button id="toS1" class="primary">Continue to Section 1</button>
+        <button id="resetToLanding" class="secondary">Explore Another Pathway</button>
+      </div>
+    </section>
+
+    <!-- Survey sections -->
+    <section id="survey" class="card hidden" aria-labelledby="surveyTitle" role="group">
+      <h2 id="surveyTitle">—</h2>
+
+      <section id="sec1Wrap" class="card hidden" aria-labelledby="s1Title" role="group">
+        <h3 id="s1Title">Section 1 — Core / General</h3>
+        <div id="sec1"></div>
+        <div class="toolbar">
+          <button id="toS2" class="primary">Next: Section 2</button>
+        </div>
+      </section>
+
+      <section id="sec2Wrap" class="card hidden" aria-labelledby="s2Title" role="group">
+        <h3 id="s2Title">Section 2 — Established</h3>
+        <div id="sec2"></div>
+        <div class="toolbar">
+          <button id="toS3" class="primary">Next: Section 3</button>
+        </div>
+      </section>
+
+      <section id="sec3Wrap" class="card hidden" aria-labelledby="s3Title" role="group">
+        <h3 id="s3Title">Section 3 — Emerging</h3>
+        <div id="sec3"></div>
+        <div class="toolbar">
+          <button id="calc" class="primary">Calculate Results</button>
+          <button id="resetAnswers" class="secondary">Reset Answers</button>
+        </div>
+      </section>
+    </section>
+
+    <!-- Results + Summary -->
+    <section id="results" class="card hidden" aria-live="polite" role="status">
+      <h2>Results</h2>
+      <div class="kpis">
+        <div class="box"><strong>Core</strong> <div id="corePct">–</div></div>
+        <div class="box"><strong>Established</strong> <div id="estPct">–</div></div>
+        <div class="box"><strong>Emerging</strong> <div id="emgPct">–</div></div>
+      </div>
+      <p><strong>General Level:</strong> <span id="level">–</span></p>
+      <p><strong>Primary Focus:</strong> <span id="focus">–</span></p>
+      <p><strong>Recommendation:</strong> <span id="reco">–</span></p>
+      <div id="upgrades"></div>
+    </section>
+
+    <section id="summary" class="card hidden" aria-labelledby="summaryTitle">
+      <h2 id="summaryTitle">Summary — <span id="sumPath">—</span></h2>
+      <p id="sumTime"></p>
+      <p id="sumScores"></p>
+      <p><strong>General Level:</strong> <span id="sumLevel">—</span></p>
+      <p><strong>Primary Focus:</strong> <span id="sumFocus">—</span></p>
+      <p><strong>Recommendation:</strong> <span id="sumReco">—</span></p>
+      <div id="sumUpgrades" style="margin:6px 0 12px 0;"></div>
+
+      <h3>Your Responses</h3>
+      <div id="sumDetails"></div>
+
+      <!-- Connect box -->
+      <div style="background-color:#E8F4FA; border-left:6px solid #007ACC; padding:1em; margin:1.5em 0; color:#222;">
+        <h2 style="font-size:1.1em; margin-top:0;">Curious about your career pathway in the energy sector?</h2>
+        <p>Creative Links is here to help power up possibilities and spark new opportunities!</p>
+        <a href="mailto:pks@creativelinks.ca?subject=I%E2%80%99m%20Ready%20for%20WATTs%20Next!" 
+           style="display:inline-block; background-color:#007ACC; color:#FFF; padding:0.6em 1.2em; text-decoration:none; font-weight:bold; border-radius:4px; margin-top:0.5em;">
+           WATTs • Next
+        </a>
+      </div>
+
+      <div class="toolbar">
+        <button id="printBtn" class="secondary">Print / Save PDF</button>
+        <button id="exploreBtn" class="secondary">Explore Another Pathway</button>
+        <button id="resetBtn" class="secondary">Reset Answers</button>
+      </div>
+      <p class="muted">Build: 2025-08-31 18:59:30Z</p>
+    </section>
+  </main>
+</div>
+
+<!-- Overview modal -->
+<div class="modal-backdrop" id="backdrop" style="display:none; position:fixed; inset:0; background:rgba(2,6,23,.55)"></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" style="display:none; position:fixed; inset:0; align-items:center; justify-content:center;">
+  <div class="dialog" style="background:#fff; max-width:900px; max-height:85vh; overflow:auto; border-radius:12px; border:1px solid var(--line); padding:18px;">
+    <header>
+      <h2 id="modalTitle" style="margin:0">Pathway Overview</h2>
+      <button id="closeModal">Close</button>
+    </header>
+    <div id="modalBody" style="padding-top:10px"></div>
+  </div>
+</div>
+
+<!-- Support floating icon + modal -->
+<button id="supportFab" class="support-fab" aria-label="Support help" title="Support">?</button>
+<div class="modal" id="supportModal" role="dialog" aria-modal="true" aria-labelledby="supportTitle" style="display:none; position:fixed; inset:0; align-items:center; justify-content:center;">
+  <div class="dialog" style="background:#fff; max-width:560px; max-height:85vh; overflow:auto; border-radius:12px; border:1px solid var(--line); padding:18px;">
+    <header>
+      <h2 id="supportTitle" style="margin:0">Support</h2>
+      <button id="closeSupport">Close</button>
+    </header>
+    <div style="padding-top:10px">
+      <div style="background-color:#F5F5F5; border-left:6px solid #333; padding:1em; margin:1.5em 0; color:#222;">
+        <h2 style="font-size:1.1em; margin-top:0;">Need a Boost?</h2>
+        <p>If you have questions about completing the <strong>WATTs Assessment</strong>, our Creative Links team is here to help.</p>
+        <a href="mailto:pks@creativelinks.ca?subject=Support%20Request%20-%20WATTs%20App" 
+           style="display:inline-block; background-color:#004080; color:#FFF; padding:0.6em 1.2em; text-decoration:none; font-weight:bold; border-radius:4px; margin-top:0.5em;">
+           SUPPORT
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sticky Next (mobile only via CSS) -->
+<div class="sticky-next" id="stickyBar" role="region" aria-label="Section navigation" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e7eb;padding:10px;z-index:5000;">
+  <div style="max-width:1140px;margin:0 auto;display:flex;justify-content:flex-end;">
+    <button id="stickyBtn" class="primary" style="padding:10px 16px;">Next</button>
+  </div>
+</div>
+
+<script>
+const DATA = {"Emissions Measurement Professional": {"weights": {"core": 2, "established": 3, "emerging": 4}, "core": ["Measurement principles (flow/pressure/temperature)", "Calibration procedures and uncertainty", "Data quality and validation methods", "Use of gas composition and heating value", "Documentation and compliance records", "Troubleshooting measurement systems", "Safety procedures and site permits", "Field communications and reporting"], "established": ["O&G emissions inventories and quantification", "Portable analyzer use and maintenance", "Fugitive emissions surveys (LDAR)", "Stack testing coordination and data checks", "Custody transfer and metering verification", "Regulatory submissions and audit support"], "emerging": ["Satellite/aerial detection and reconciliation", "Continuous emissions monitoring (CEMS) integration", "CCS MRV protocols and data pipelines", "Methane measurement innovations & analytics", "GHG accounting and ESG disclosures"], "upgrades": ["CEMS vendor training", "LDAR certifications", "MRV/ESG reporting courses"]}, "Engineer \u2014 Electrical/Instrumentation": {"weights": {"core": 2, "established": 3, "emerging": 4}, "core": ["Single\u2011line diagrams, load lists, and cable schedules", "Protection and coordination basics", "PLC/DCS/SCADA fundamentals", "Instrumentation selection and loop drawings", "Area classification (hazardous locations)", "Grounding/bonding and power quality", "Controls narratives and cause\u2011and\u2011effect", "Testing/commissioning procedures"], "established": ["MCC/switchgear selection and short\u2011circuit studies", "Control system architectures for O&G facilities", "Instrumentation data sheets and calibration", "Field commissioning and SAT/FAT support", "Cybersecurity awareness for control systems", "Maintenance/troubleshooting of power & controls"], "emerging": ["Hydrogen safety interlocks and detection systems", "CCS monitoring sensors and data integration", "LNG cryogenic instrumentation and ESD systems", "Renewable integration and microgrids", "Digitalization/IIoT for condition monitoring"], "upgrades": ["P.Eng. or CET (E&I)", "Arc flash/coordination studies training", "Industrial cybersecurity courses"]}, "Engineer \u2014 Mechanical": {"weights": {"core": 2, "established": 3, "emerging": 4}, "core": ["Pressure vessel and piping design fundamentals", "Rotating equipment basics (pumps, compressors)", "Material selection and mechanical integrity", "Stress analysis and supports", "Codes & standards (ASME/CSA/API) awareness", "3D modeling and drawing review", "Maintenance/reliability principles", "Risk and failure analysis (RCA)"], "established": ["Specify/select pumps, compressors, and heat exchangers", "Mechanical design for O&G facilities and pipelines", "Fitness\u2011for\u2011service and RBI inputs", "Commissioning, alignment, and vibration checks", "Turnaround/scoped maintenance packages", "Vendor coordination and QA inspections"], "emerging": ["Hydrogen embrittlement/material compatibility", "CO\u2082 compression and dense\u2011phase considerations", "LNG cryogenic materials & thermal stresses", "Geothermal equipment and wellhead hardware", "Battery energy storage mechanical integration"], "upgrades": ["P.Eng. licensure", "API/ASME courses", "Vibration & reliability training"]}, "Engineer \u2014 Process/Chemical": {"weights": {"core": 2, "established": 3, "emerging": 4}, "core": ["Apply mass/energy balances and thermodynamics", "Read PFDs/P&IDs and equipment data sheets", "Process simulation (e.g., HYSYS/UniSim)", "Material selection and corrosion basics", "Process safety (HAZOP/LOPA) fundamentals", "Technical reporting and calculations", "Interdisciplinary coordination (Ops/Mech/E&I)", "Regulatory/compliance awareness"], "established": ["Debottlenecking and optimization of O&G facilities", "Design of separators, heaters, exchangers, treaters", "Flare/relief and overpressure protection calculations", "Emission reduction and flare minimization projects", "Troubleshooting production & processing issues", "Commissioning and start\u2011up support"], "emerging": ["Hydrogen production/purification and safety", "CCS capture design integration and compression specs", "LNG cryogenic heat exchange and process design", "Biofuels/RNG upgrading and contaminants removal", "Lifecycle/techno\u2011economic assessments for transition"], "upgrades": ["P.Eng. licensure", "HAZOP/LOPA facilitator training", "Advanced simulation & safety credentials"]}, "Energy Services Labourers & Operators": {"weights": {"core": 2, "established": 3, "emerging": 4}, "core": ["Follow safety procedures (PPE, permits, hazard IDs)", "Operate hand/power tools safely and effectively", "Read/understand basic site drawings & instructions", "Accurately complete field tickets and logs", "Communicate clearly with supervisors & team", "Basic equipment checks and routine maintenance", "Physically handle demanding tasks safely", "Strong punctuality, reliability, and teamwork"], "established": ["Rig-in/rig-out and support wellsite operations", "Assist with pressure pumping, wireline, coil, or frac support", "Operate light/heavy equipment on site (under supervision)", "Load/unload materials; manage hoses, lines, and fittings", "Support spill prevention and cleanup procedures", "Follow traffic control and haul road safety requirements"], "emerging": ["Support hydrogen safety practices and gas detection", "Assist with CCS site support (sampling, monitoring)", "LNG site basics and cryogenic safety awareness", "Biofuels/RNG facility support tasks", "Decommissioning/reclamation field support"], "upgrades": ["H2S Alive; First Aid; CSTS/CSO", "Class 3/1 license or equipment tickets", "Confined space & fall protection"]}, "Environment, Health & Safety Professional": {"weights": {"core": 2, "established": 3, "emerging": 4}, "core": ["Hazard identification and risk assessment", "Incident investigation and reporting", "Regulatory compliance and permits", "Safe work procedures and training delivery", "Industrial hygiene and exposure controls", "Emergency response planning and drills", "Contractor management and audits", "Data tracking and EHS performance metrics"], "established": ["Field inspections and corrective actions in O&G", "Waste management and spill response", "Permit\u2011to\u2011work and isolation oversight", "Environmental monitoring and sampling", "Safety meetings and toolbox talks", "Root cause analysis and corrective programs"], "emerging": ["ESG reporting frameworks and assurance basics", "CCS/MRV environmental monitoring compliance", "Hydrogen safety training and emergency planning", "LNG cryogenic safety and hazard controls", "Sustainability program design and audits"], "upgrades": ["CRSP or equivalent", "EMS/ISO 14001 lead auditor", "Advanced emergency management courses"]}, "External Relations Advisor": {"weights": {"core": 2, "established": 3, "emerging": 4}, "core": ["Stakeholder mapping and engagement planning", "Clear, audience\u2011appropriate written communication", "Public speaking and meeting facilitation", "Regulatory awareness (consultation, notifications)", "Indigenous relations principles and protocols", "Conflict resolution and negotiation", "Media monitoring and issues management", "Data tracking, reporting, and documentation"], "established": ["Design and execute engagement plans for O&G projects", "Prepare public notices, open houses, and briefings", "Coordinate with regulatory teams on filing requirements", "Maintain stakeholder databases and contact logs", "Develop key messages and Q&A documents", "Support emergency communications during incidents"], "emerging": ["Engagement for hydrogen, CCS, and geothermal projects", "ESG communication and sustainability disclosures", "Just transition and workforce reskilling narratives", "Community benefits and local procurement programs", "Digital engagement tools & analytics"], "upgrades": ["IAP2 training", "ESG/GRI reporting courses", "Indigenous cultural competency training"]}, "Facility & Process Operator": {"weights": {"core": 2, "established": 3, "emerging": 4}, "core": ["Understand facility processes and equipment", "Operate safely with permits and procedures", "Monitor readings and adjust controls", "Sample collection and basic lab tests", "Routine maintenance and housekeeping", "Write logbooks and handovers", "Alarm response and troubleshooting", "Team communication and shift coordination"], "established": ["Separator/dehydrator/heater/treater operation", "Compressors, pumps, and utilities monitoring", "Start\u2011up/shut\u2011down and emergency response", "Pigging and pipeline isolation basics", "Flaring reduction and emissions awareness", "Confined space and lockout execution"], "emerging": ["Hydrogen blending and detection systems", "CCS injection/withdrawal monitoring", "LNG/Cryogenic operation awareness", "Biofuels/RNG process oversight", "Digital control systems/analytics use"], "upgrades": ["Power Engineering (4th\u21923rd Class)", "Operator technologist diploma", "Advanced control systems training"]}, "Geoscientist": {"weights": {"core": 2, "established": 3, "emerging": 4}, "core": ["Apply math/chem/physics to geoscience problems", "Interpret maps & cross\u2011sections; prepare plans/models", "Use statistical/digital tools & geoscience software; 3D seismic interpretation", "Collect/compile/analyze field & lab data; write technical reports", "Understand environmental legislation/regulations", "Awareness of Indigenous relations & community context", "Analytical thinking; attention to detail; collaboration", "Safety awareness for industrial operations (e.g., H2S Alive)"], "established": ["Reservoir characterization (well logs, core); drilling location advice", "Interpret seismic/geophysical data for development plans", "Plan/execute exploration programs with multi\u2011disciplinary teams", "Assess subsurface risk for reservoir/completions/mining projects", "Plan well decommissioning, remediation, and repurposing", "Field testing & remote sensing; operate/interpret seismic tools"], "emerging": ["Hydrogen properties/behaviour; evaluate cavern storage", "CO\u2082 properties/handling; injection well design; storage site evaluation & MRV", "Plan H\u2082/CO\u2082 storage programs with long\u2011term monitoring & safety systems", "Geophysical mapping for decommissioning/re\u2011use & safe fluid disposal", "Remote sensing (satellite/aerial) for transition projects"], "upgrades": ["P.Geo. licensure", "Seismic/reservoir modeling", "Hydrogen & CO\u2082 safety micro\u2011credentials"]}, "Inspection & Testing Technician": {"weights": {"core": 2, "established": 3, "emerging": 4}, "core": ["Read and interpret drawings & specs", "Use measuring tools and gauges accurately", "Follow QA/QC procedures and documentation", "Non\u2011destructive testing (NDT) basics", "Equipment calibration and maintenance", "Safety procedures and site protocols", "Report writing and defect logging", "Client communication and professionalism"], "established": ["Visual, UT, MT, PT, RT coordination/assistance", "Pressure testing and hydrotesting procedures", "Welding inspection support and WPS awareness", "Coating inspection basics and holiday testing", "Vendor surveillance and FAT participation", "Regulatory code awareness (ASME/API/CSA)"], "emerging": ["Digital/NDT data capture and analytics", "Drone\u2011based inspection support", "Hydrogen/CO\u2082 service inspection considerations", "CUI detection and predictive techniques", "Condition\u2011based monitoring programs"], "upgrades": ["CGSB/ASNT certifications", "API/CSA code courses", "Advanced UT/PAUT training"]}, "Sustainability Professional": {"weights": {"core": 2, "established": 3, "emerging": 4}, "core": ["Sustainability strategy and materiality", "Data collection and KPI management", "Stakeholder engagement and disclosure", "Policy/regulatory awareness for ESG", "Life\u2011cycle thinking and circularity basics", "Change management and collaboration", "Report drafting and visualization", "Assurance/readiness for audits"], "established": ["GHG inventory (Scope 1/2) and reductions planning", "Operational waste, water, and energy programs", "Supplier engagement and codes of conduct", "ESG training and awareness campaigns", "Cross\u2011functional working groups", "Policy monitoring and compliance dashboards"], "emerging": ["Scope 3 screening and target setting", "CCS and removals in net\u2011zero roadmaps", "Renewables PPAs and certificates", "Biodiversity and nature\u2011related disclosure", "Transition finance/taxonomy literacy"], "upgrades": ["GRI/SASB/ISSB training", "LCA practitioner courses", "Assurance/limited assurance skills"]}, "Technologist": {"weights": {"core": 2, "established": 3, "emerging": 4}, "core": ["Interpret drawings, P&IDs, specifications", "Use CAD/drafting tools effectively", "Collect accurate field measurements & data", "Calibrate and maintain instruments", "Follow QA/QC procedures and documentation", "Apply safety procedures (LOTO, PPE, permits)", "Prepare concise technical reports", "Collaborate with engineers and operators"], "established": ["Production/processing support in oil & gas", "Pipeline integrity and inspection support", "Refinery/petrochemical QA/QC activities", "Oil sands tailings & water sampling programs", "Energy services field technician work", "Control systems support (DCS/PLC/SCADA)"], "emerging": ["Hydrogen instrumentation & safety interlocks", "CCS MRV support (monitoring, reporting, verification)", "LNG cryogenic measurements and sensors", "Biofuels/RNG laboratory testing & QA", "Geothermal measurement systems"], "upgrades": ["C.E.T. designation", "Vendor courses: DCS/PLC/SCADA/CAD", "Advanced sampling & QA credentials"]}, "Truck Driver": {"weights": {"core": 2, "established": 3, "emerging": 4}, "core": ["Valid license/class and clean abstracts", "Pre\u2011trip inspections and defect reporting", "Load securement and TDG awareness", "Hours of service and log keeping", "Site safety and PPE compliance", "Navigation and route planning", "Communication and customer service", "Basic maintenance checks"], "established": ["Fluid hauling (water/crude/chemicals) procedures", "Off\u2011road winter driving & chains", "On\u2011site safety at wellsites/facilities", "Spill prevention and response steps", "Paperwork accuracy (tickets/BOLs)", "Working with dispatch and schedule changes"], "emerging": ["Hydrogen transport safety basics", "CO\u2082 transport and unloading awareness", "LNG cryogenic handling and PPE", "Biofuels/RNG delivery protocols", "Low\u2011emission fleet technologies (EV/CNG)"], "upgrades": ["Air brakes & specialized endorsements", "TDG/WHMIS refreshers", "Winter driving & defensive driving courses"]}};
+const INTRO = {"Emissions Measurement Professional": {"core": "Assess core/transferable skills for the pathway.", "established": "Evaluate experience in established sector work patterns.", "emerging": "Explore readiness for transition roles and newer sectors."}, "Engineer \u2014 Electrical/Instrumentation": {"core": "Assess core/transferable skills for the pathway.", "established": "Evaluate experience in established sector work patterns.", "emerging": "Explore readiness for transition roles and newer sectors."}, "Engineer \u2014 Mechanical": {"core": "Assess core/transferable skills for the pathway.", "established": "Evaluate experience in established sector work patterns.", "emerging": "Explore readiness for transition roles and newer sectors."}, "Engineer \u2014 Process/Chemical": {"core": "Assess core/transferable skills for the pathway.", "established": "Evaluate experience in established sector work patterns.", "emerging": "Explore readiness for transition roles and newer sectors."}, "Energy Services Labourers & Operators": {"core": "Assess core/transferable skills for the pathway.", "established": "Evaluate experience in established sector work patterns.", "emerging": "Explore readiness for transition roles and newer sectors."}, "Environment, Health & Safety Professional": {"core": "Assess core/transferable skills for the pathway.", "established": "Evaluate experience in established sector work patterns.", "emerging": "Explore readiness for transition roles and newer sectors."}, "External Relations Advisor": {"core": "Assess core/transferable skills for the pathway.", "established": "Evaluate experience in established sector work patterns.", "emerging": "Explore readiness for transition roles and newer sectors."}, "Facility & Process Operator": {"core": "Assess core/transferable skills for the pathway.", "established": "Evaluate experience in established sector work patterns.", "emerging": "Explore readiness for transition roles and newer sectors."}, "Geoscientist": {"core": "Assess core/transferable skills for the pathway.", "established": "Evaluate experience in established sector work patterns.", "emerging": "Explore readiness for transition roles and newer sectors."}, "Inspection & Testing Technician": {"core": "Assess core/transferable skills for the pathway.", "established": "Evaluate experience in established sector work patterns.", "emerging": "Explore readiness for transition roles and newer sectors."}, "Sustainability Professional": {"core": "Assess core/transferable skills for the pathway.", "established": "Evaluate experience in established sector work patterns.", "emerging": "Explore readiness for transition roles and newer sectors."}, "Technologist": {"core": "Assess core/transferable skills for the pathway.", "established": "Evaluate experience in established sector work patterns.", "emerging": "Explore readiness for transition roles and newer sectors."}, "Truck Driver": {"core": "Assess core/transferable skills for the pathway.", "established": "Evaluate experience in established sector work patterns.", "emerging": "Explore readiness for transition roles and newer sectors."}};
+const INTRO_TMPL = "\n<h2>{name} \u2014 What & How</h2>\n<p><strong>Purpose.</strong> Reflect on your experience across three areas of the <strong>{name}</strong> pathway.</p>\n<ul>\n  <li><strong>Core/General:</strong> {core}</li>\n  <li><strong>Established:</strong> {established}</li>\n  <li><strong>Emerging:</strong> {emerging}</li>\n</ul>\n<p><strong>How to Rate.</strong> Choose the level that fits your typical performance (Bloom\u2019s verbs in italics):</p>\n<ul>\n  <li><strong>Novice</strong> <em>(Remember/Recognize)</em></li>\n  <li><strong>Basic</strong> <em>(Understand/Explain)</em></li>\n  <li><strong>Working</strong> <em>(Apply/Execute)</em></li>\n  <li><strong>Advanced</strong> <em>(Analyze/Adapt)</em></li>\n  <li><strong>Expert</strong> <em>(Evaluate/Create)</em></li>\n</ul>\n<p class=\"muted\">Tip: Think about real examples\u2014what evidence shows your current level?</p>\n";
+const SCALE = ["Novice","Basic","Working","Advanced","Expert"];
+const LABEL_TO_SCORE = {"Novice":1,"Basic":2,"Working":3,"Advanced":4,"Expert":5};
+
+function qs(s){return document.querySelector(s);}
+function qsa(s){return Array.from(document.querySelectorAll(s));}
+
+function setStep(n){
+  const ids=['st1','st2','st3','st4','st5'];
+  ids.forEach((id,idx)=>{
+    const el = qs('#'+id);
+    el.classList.remove('active','done');
+    if(idx < n-1) el.classList.add('done');
+    else if(idx === n-1) el.classList.add('active');
+  });
+}
+
+function setIntro(name){
+  const i = INTRO[name];
+  const html = INTRO_TMPL
+    .replaceAll("{name}", name)
+    .replaceAll("{core}", i.core)
+    .replaceAll("{established}", i.established)
+    .replaceAll("{emerging}", i.emerging);
+  qs('#intro').innerHTML = html + `<div class="toolbar"><button id="toS1" class="primary">Continue to Section 1</button> <button id="resetToLanding" class="secondary">Explore Another Pathway</button></div>`;
+  qs('#toS1').addEventListener('click', ()=>{ qs('#sec1Wrap').classList.remove('hidden'); qs('#sec2Wrap').classList.add('hidden'); qs('#sec3Wrap').classList.add('hidden'); setStep(2); window.scrollTo({top:qs('#sec1Wrap').offsetTop-20,behavior:'smooth'}); updateSticky(); });
+  qs('#resetToLanding').addEventListener('click', exploreAnother);
+}
+
+function buildLikert(container, sectionKey, items){
+  container.innerHTML = "";
+  items.forEach((q,i)=>{
+    const row = document.createElement('div'); row.className='likert';
+    const id = sectionKey + "-" + i;
+    const lab = document.createElement('label'); lab.textContent = q; lab.setAttribute('for', id);
+    const sel = document.createElement('select'); 
+    sel.id = id; sel.setAttribute('data-section', sectionKey); sel.setAttribute('data-index', i); sel.setAttribute('data-question', q);
+    sel.setAttribute('aria-label', q + " — choose your level");
+    const placeholder = document.createElement('option'); placeholder.value=""; placeholder.textContent="—"; sel.appendChild(placeholder);
+    SCALE.forEach(label=>{ const opt=document.createElement('option'); opt.value=label; opt.textContent=label; sel.appendChild(opt); });
+    row.appendChild(lab); row.appendChild(sel);
+    container.appendChild(row);
+  });
+}
+
+function renderSurvey(name){
+  const d = DATA[name];
+  qs('#surveyTitle').textContent = name + " — Skills Assessment (Core×"+d.weights.core+", Established×"+d.weights.established+", Emerging×"+d.weights.emerging+")";
+  buildLikert(qs('#sec1'), 'core', d.core);
+  buildLikert(qs('#sec2'), 'established', d.established);
+  buildLikert(qs('#sec3'), 'emerging', d.emerging);
+  qs('#landing').classList.add('hidden');
+  qs('#workflow').classList.remove('hidden');
+  qs('#intro').classList.remove('hidden');
+  qs('#survey').classList.remove('hidden');
+  qs('#results').classList.add('hidden');
+  qs('#summary').classList.add('hidden');
+  qs('#sec1Wrap').classList.add('hidden');
+  qs('#sec2Wrap').classList.add('hidden');
+  qs('#sec3Wrap').classList.add('hidden');
+  setStep(1);
+  window.scrollTo({top:0,behavior:'smooth'});
+  updateSticky();
+}
+
+function collect(prefix){
+  return qsa(`[data-section="${prefix}"]`).map(sel=>{ 
+    const label = sel.value || ""; 
+    const score = LABEL_TO_SCORE[label] || 0; 
+    return { section: prefix, index: parseInt(sel.getAttribute('data-index')||"0",10), question: sel.getAttribute('data-question')||"", label, score }; 
+  });
+}
+function calcPct(vals, weight){ const sum = vals.reduce((a,b)=>a+b.score,0)*weight; const max = vals.length*5*weight; return Math.round(max? (sum/max*100):0); }
+
+function computeResults(){
+  const name = qs('#path').value;
+  const d = DATA[name];
+  const core = collect('core'), est = collect('established'), emg = collect('emerging');
+  const corePct = calcPct(core, d.weights.core);
+  const estPct  = calcPct(est, d.weights.established);
+  const emgPct  = calcPct(emg, d.weights.emerging);
+
+  qs('#corePct').textContent = corePct + "%";
+  qs('#estPct').textContent = estPct + "%";
+  qs('#emgPct').textContent = emgPct + "%";
+
+  let level = 'Developing'; if(corePct>=80) level='Highly Skilled'; else if(corePct>=60) level='Competent';
+  qs('#level').textContent = level;
+
+  let focus = (estPct>emgPct) ? 'Established' : 'Emerging';
+  qs('#focus').textContent = focus;
+
+  const RULES = {
+    primaryEstablished: "Strong fit for established sector roles.",
+    balancedEstToEmg: "Established base with emerging exposure — ideal for transition projects.",
+    primaryEmerging: "High alignment to emerging sectors (H2/LNG/CCS/biofuels).",
+    balancedEmgToEst: "Emerging focus with good base — pursue hybrid roles bridging old/new.",
+    broad: "Broad applicability across both sectors.",
+    foundational: "Strengthen core skills first and add targeted micro-credentials."
+  };
+
+  let reco='';
+  if(estPct>emgPct && (estPct>=80 || emgPct<60)) reco = RULES.primaryEstablished;
+  else if(estPct>emgPct && emgPct>=60) reco = RULES.balancedEstToEmg;
+  else if(emgPct>estPct && (emgPct>=80 || estPct<60)) reco = RULES.primaryEmerging;
+  else if(emgPct>estPct && estPct>=60) reco = RULES.balancedEmgToEst;
+  else if(estPct>=60 && emgPct>=60) reco = RULES.broad;
+  else reco = RULES.foundational;
+  qs('#reco').textContent = reco;
+
+  qs('#upgrades').innerHTML = (d.upgrades||[]).map(u=>`<span class="pill">${u}</span>`).join(' ');
+
+  const ts = new Date().toISOString();
+  qs('#sumPath').textContent = name;
+  qs('#sumTime').textContent = "Timestamp: " + ts;
+  qs('#sumScores').textContent = `Section scores: Core ${corePct}%, Established ${estPct}%, Emerging ${emgPct}%`;
+  qs('#sumLevel').textContent = level;
+  qs('#sumFocus').textContent = focus;
+  qs('#sumReco').textContent = reco;
+  qs('#sumUpgrades').innerHTML = (d.upgrades||[]).map(u=>`<span class="pill">${u}</span>`).join(' ');
+
+  function sectionTable(title, list){
+    if(!list.length) return "";
+    const rows = list.map(o=>`<tr><td>${o.question}</td><td>${o.label || "—"}</td></tr>`).join("");
+    return `<h4>${title}</h4><table><thead><tr><th>Question</th><th>Your Response</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+  qs('#sumDetails').innerHTML = sectionTable('Section 1 — Core / General', core)
+    + sectionTable('Section 2 — Established', est)
+    + sectionTable('Section 3 — Emerging', emg);
+
+  qs('#results').classList.remove('hidden');
+  qs('#summary').classList.remove('hidden');
+  setStep(5);
+  updateSticky();
+  return {name, ts};
+}
+
+// Modal handlers
+let lastFocus = null;
+function openModal(html){
+  lastFocus = document.activeElement;
+  qs('#modalBody').innerHTML = html;
+  qs('#backdrop').style.display = 'block';
+  qs('#modal').style.display = 'flex';
+  qs('#overviewBtn').setAttribute('aria-expanded','true');
+}
+function closeModal(){
+  qs('#modalBody').innerHTML = '';
+  qs('#backdrop').style.display = 'none';
+  qs('#modal').style.display = 'none';
+  qs('#overviewBtn').setAttribute('aria-expanded','false');
+  if(lastFocus) lastFocus.focus();
+}
+
+document.getElementById('closeModal').addEventListener('click', closeModal);
+document.getElementById('backdrop').addEventListener('click', closeModal);
+
+// Start / Overview gating
+document.getElementById('start').addEventListener('click', ()=>{
+  const name = document.getElementById('path').value;
+  if(!name) return;
+  setIntro(name);
+  renderSurvey(name);
+  toggleOverviewButton();
+  updateSticky();
+});
+document.getElementById('overviewBtn').addEventListener('click', ()=>{
+  const name = document.getElementById('path').value;
+  if(!name) return;
+  const html = `<h2>${name} — Pathway Overview</h2><p>Overview content can be pulled from the pathway PDF summary for this role.</p>`;
+  openModal(html);
+});
+
+// Section navigation
+document.getElementById('toS2').addEventListener('click', ()=>{ qs('#sec1Wrap').classList.add('hidden'); qs('#sec2Wrap').classList.remove('hidden'); setStep(3); window.scrollTo({top:qs('#sec2Wrap').offsetTop-20,behavior:'smooth'}); updateSticky(); });
+document.getElementById('toS3').addEventListener('click', ()=>{ qs('#sec2Wrap').classList.add('hidden'); qs('#sec3Wrap').classList.remove('hidden'); setStep(4); window.scrollTo({top:qs('#sec3Wrap').offsetTop-20,behavior:'smooth'}); updateSticky(); });
+document.getElementById('calc').addEventListener('click', computeResults);
+document.getElementById('printBtn').addEventListener('click', ()=> window.print());
+
+function exploreAnother(){
+  Array.from(document.querySelectorAll('#survey select')).forEach(sel=> sel.value = "");
+  document.getElementById('results').classList.add('hidden');
+  document.getElementById('summary').classList.add('hidden');
+  document.getElementById('intro').classList.add('hidden');
+  document.getElementById('survey').classList.add('hidden');
+  document.getElementById('workflow').classList.add('hidden');
+  document.getElementById('landing').classList.remove('hidden');
+  closeModal();
+  document.getElementById('path').focus();
+  window.scrollTo({top:0,behavior:'smooth'});
+  updateSticky();
+}
+document.getElementById('exploreBtn').addEventListener('click', exploreAnother);
+document.getElementById('resetToLanding').addEventListener('click', exploreAnother);
+
+function resetAnswers(){
+  Array.from(document.querySelectorAll('#survey select')).forEach(sel=> sel.value = "");
+  document.getElementById('results').classList.add('hidden');
+  document.getElementById('summary').classList.add('hidden');
+  document.getElementById('intro').classList.remove('hidden');
+  document.getElementById('survey').classList.remove('hidden');
+  document.getElementById('workflow').classList.remove('hidden');
+  document.getElementById('sec1Wrap').classList.add('hidden');
+  document.getElementById('sec2Wrap').classList.add('hidden');
+  document.getElementById('sec3Wrap').classList.add('hidden');
+  setStep(1);
+  window.scrollTo({top:0,behavior:'smooth'});
+  updateSticky();
+}
+document.getElementById('resetBtn').addEventListener('click', resetAnswers);
+document.getElementById('resetAnswers').addEventListener('click', resetAnswers);
+
+function toggleOverviewButton(){
+  const name = document.getElementById('path').value;
+  const btn = document.getElementById('overviewBtn');
+  if(name) btn.classList.remove('hidden'); else btn.classList.add('hidden');
+}
+
+// Sticky Next logic (mobile only via CSS visibility)
+const stickyBar = document.getElementById('stickyBar');
+const stickyBtn = document.getElementById('stickyBtn');
+function currentStep(){
+  if(!document.getElementById('workflow') || document.getElementById('workflow').classList.contains('hidden')) return 0;
+  if(!document.getElementById('sec1Wrap').classList.contains('hidden')) return 2;
+  if(!document.getElementById('sec2Wrap').classList.contains('hidden')) return 3;
+  if(!document.getElementById('sec3Wrap').classList.contains('hidden')) return 4;
+  if(!document.getElementById('summary').classList.contains('hidden')) return 5;
+  return 1;
+}
+function updateSticky(){
+  const step = currentStep();
+  // hide on landing
+  if(document.getElementById('landing') && !document.getElementById('landing').classList.contains('hidden')){ stickyBar.style.display='none'; return; }
+  if(step<=1){ stickyBar.style.display='none'; return; }
+  if(step===2){ stickyBar.style.display='block'; stickyBtn.textContent = 'Next: Section 2'; return; }
+  if(step===3){ stickyBar.style.display='block'; stickyBtn.textContent = 'Next: Section 3'; return; }
+  if(step===4){ stickyBar.style.display='block'; stickyBtn.textContent = 'Calculate Results'; return; }
+  stickyBar.style.display='none';
+}
+stickyBtn.addEventListener('click', ()=>{
+  const step = currentStep();
+  if(step===2) qs('#toS2').click();
+  else if(step===3) qs('#toS3').click();
+  else if(step===4) qs('#calc').click();
+});
+
+// Initialize dropdown (A-Z + placeholder, and enable buttons when chosen)
+(function init(){
+  const sel = document.getElementById('path');
+  // Build list
+  const items = Object.keys(DATA).slice().sort((a,b)=>a.localeCompare(b));
+  sel.innerHTML = `<option value="" selected>&lt;- Select Pathway -&gt;</option>` + items.map(k=>`<option value="${k}">${k}</option>`).join('');
+  const start = document.getElementById('start');
+  const overview = document.getElementById('overviewBtn');
+  function gate(){
+    const has = !!sel.value;
+    if(start){ start.disabled = !has; start.setAttribute('aria-disabled', String(!has)); }
+    if(overview){ overview.disabled = !has; overview.setAttribute('aria-disabled', String(!has)); }
+  }
+  sel.addEventListener('change', gate);
+  gate();
+})();
+
+// Support modal controls
+const supportFab = document.getElementById('supportFab');
+const supportModal = document.getElementById('supportModal');
+const closeSupport = document.getElementById('closeSupport');
+supportFab?.addEventListener('click', ()=>{ supportModal.style.display='flex'; });
+closeSupport?.addEventListener('click', ()=>{ supportModal.style.display='none'; });
+
+</script>
+</body>
+</html>
