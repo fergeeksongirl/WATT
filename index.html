@@ -47,13 +47,26 @@
     header, #landing, .stepper, .toolbar, #survey, #results { display:none !important; }
     #summary { display:block !important; border:none; }
   }
+
+/* v2.13 viewport controls */
+@media (max-width:768px){
+  /* Hide inline section Next buttons on mobile */
+  #survey .toolbar .primary { display:none !important; }
+  /* Sticky bar may be shown by JS when a section is active */
+  #stickyBar { display:block !important; }
+}
+@media (min-width:769px){
+  /* Hide sticky bar on desktop */
+  #stickyBar { display:none !important; }
+}
+
 </style>
 </head>
 <body>
 <header class="brand">
   <div class="wrap">
     <div style="font-weight:700; font-size:20px;">WATTs • Workforce Assessment for Transition & Talent</div>
-    <div class="sub">Build: 2025-08-31 18:59:30Z</div>
+    <div class="sub">Build: 2025-08-31 19:45:00Z</div>
   </div>
 </header>
 
@@ -168,7 +181,7 @@
         <button id="exploreBtn" class="secondary">Explore Another Pathway</button>
         <button id="resetBtn" class="secondary">Reset Answers</button>
       </div>
-      <p class="muted">Build: 2025-08-31 18:59:30Z</p>
+      <p class="muted">Build: 2025-08-31 19:45:00Z</p>
     </section>
   </main>
 </div>
@@ -241,7 +254,7 @@ function setIntro(name){
     .replaceAll("{established}", i.established)
     .replaceAll("{emerging}", i.emerging);
   qs('#intro').innerHTML = html + `<div class="toolbar"><button id="toS1" class="primary">Continue to Section 1</button> <button id="resetToLanding" class="secondary">Explore Another Pathway</button></div>`;
-  qs('#toS1').addEventListener('click', ()=>{ qs('#sec1Wrap').classList.remove('hidden'); qs('#sec2Wrap').classList.add('hidden'); qs('#sec3Wrap').classList.add('hidden'); setStep(2); window.scrollTo({top:qs('#sec1Wrap').offsetTop-20,behavior:'smooth'}); updateSticky(); });
+  qs('#toS1').addEventListener('click', ()=>{ qs('#toS1').style.display='none'; const _exp=qs('#resetToLanding'); if(_exp){_exp.style.display='none';}  qs('#sec1Wrap').classList.remove('hidden'); qs('#sec2Wrap').classList.add('hidden'); qs('#sec3Wrap').classList.add('hidden'); setStep(2); window.scrollTo({top:qs('#sec1Wrap').offsetTop-20,behavior:'smooth'}); updateSticky(); });
   qs('#resetToLanding').addEventListener('click', exploreAnother);
 }
 
