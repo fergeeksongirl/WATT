@@ -1,3 +1,0 @@
-# WATT
-
-Placeholder README.
