@@ -62,11 +62,11 @@
 
 </style>
 </head>
-<body>
+<body data-build-version='v2.13.1'>
 <header class="brand">
   <div class="wrap">
     <div style="font-weight:700; font-size:20px;">WATTs • Workforce Assessment for Transition & Talent</div>
-    <div class="sub">Build: 2025-08-31 19:45:00Z</div>
+    <div class="sub">Build: 2025-08-31 20:48:03ZZ</div>
   </div>
 </header>
 
@@ -134,9 +134,7 @@
         <h3 id="s3Title">Section 3 — Emerging</h3>
         <div id="sec3"></div>
         <div class="toolbar">
-          <button id="calc" class="primary">Calculate Results</button>
-          <button id="resetAnswers" class="secondary">Reset Answers</button>
-        </div>
+          <button id="calc" class="primary">Calculate Results</button></div>
       </section>
     </section>
 
@@ -181,7 +179,7 @@
         <button id="exploreBtn" class="secondary">Explore Another Pathway</button>
         <button id="resetBtn" class="secondary">Reset Answers</button>
       </div>
-      <p class="muted">Build: 2025-08-31 19:45:00Z</p>
+      <p class="muted">Build: 2025-08-31 20:48:03ZZ</p>
     </section>
   </main>
 </div>
@@ -439,8 +437,6 @@ function resetAnswers(){
   updateSticky();
 }
 document.getElementById('resetBtn').addEventListener('click', resetAnswers);
-document.getElementById('resetAnswers').addEventListener('click', resetAnswers);
-
 function toggleOverviewButton(){
   const name = document.getElementById('path').value;
   const btn = document.getElementById('overviewBtn');
