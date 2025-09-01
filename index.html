@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>WATTs v12.7</title>
+<title>DEMO - WATTs v12.8</title>
 <link rel="icon" href="/mnt/data/favicon.jpeg">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
@@ -63,6 +63,24 @@
 /* Hide the inline Next buttons in Sections 1 & 2 */
 #sec1Wrap .toolbar,
 #sec2Wrap .toolbar { display: none !important; }
+	
+/* === v12.7 mobile refinements === */
+@media (max-width: 768px) {
+  /* Make all selects & buttons comfortably full-width */
+  select, button { width: 100%; max-width: 100%; }
+
+  /* Pathway selector never overflows the card */
+  #path { width: 100%; min-width: 0; }
+
+  /* Likert rows become single column (label above control) */
+  .likert { grid-template-columns: 1fr; }
+
+  /* KPI tiles stack vertically */
+  .kpis { grid-template-columns: 1fr; }
+
+  /* Action bars stack nicely and wrap */
+  .toolbar { flex-direction: column; align-items: stretch; }
+}
 
 </style>
 </head>
@@ -116,7 +134,7 @@
 	  <br>
 	
 <p id="landingHelp" class="sr-only">After selecting a pathway, choose either Start Assessment to begin the Skills Assessment -or Pathway Overview to read about that career before starting.</p>
-      <div class="toolbar" style="margin-top:10px">
+      <div class="toolbar" style="padding-top: 10px;">
         <button id="start" class="primary" disabled>Start Assessment</button>
         <button id="overviewBtn" class="secondary" aria-haspopup="dialog" aria-controls="modal" aria-expanded="false" disabled>Pathway Overview</button>
       </div>
@@ -134,7 +152,7 @@
 
     <section id="intro" class="card hidden" aria-labelledby="introTitle">
       <h2 id="introTitle" class="sr-only">Skills Assessment Survey</h2>
-      <div class="toolbar">
+      <div class="toolbar" style="padding-top: 20px;">
         <button id="toS1" class="primary">Continue to Section 1</button>
         <button id="resetToLanding" class="secondary">Explore Another Pathway</button>
       </div>
@@ -158,7 +176,7 @@
       <section id="sec1Wrap" class="card" aria-labelledby="s1Title" role="group">
         <h3 id="s1Title">Section 1 — Core / General</h3>
         <div id="sec1"></div>
-        <div class="toolbar">
+        <div class="toolbar" style="padding-top: 20px;">
           <button id="toS2" class="primary">Next: Section 2</button>
         </div>
       </section>
@@ -166,7 +184,7 @@
       <section id="sec2Wrap" class="card hidden" aria-labelledby="s2Title" role="group">
         <h3 id="s2Title">Section 2 — Established</h3>
         <div id="sec2"></div>
-        <div class="toolbar">
+        <div class="toolbar" style="padding-top: 20px;">
           <button id="toS3" class="primary">Next: Section 3</button>
         </div>
       </section>
@@ -174,7 +192,7 @@
       <section id="sec3Wrap" class="card hidden" aria-labelledby="s3Title" role="group">
         <h3 id="s3Title">Section 3 — Emerging</h3>
         <div id="sec3"></div>
-        <div class="toolbar">
+        <div class="toolbar" style="padding-top: 20px;">
           <button id="calc" class="primary">Calculate Results</button>          
         </div>
       </section>
@@ -196,7 +214,7 @@
 	<div class="toolbar" id="respToggleWrap">
 		<div>
 		<h2>Response Summary</h2>
-	  <label for="showResponses" style="display:flex; align-items:center; gap:.5rem;">
+	  <label for="showResponses" style="display:flex; align-items:center; gap:.5rem; padding-top: 10px;">
 		<input type="checkbox" id="showResponses" />
 		  <span> View my responses with the results and include them when printing.</span>
 	  </label><br>
@@ -207,7 +225,7 @@
 <div id="resultsResponses" class="card hidden" aria-live="polite"></div>
 
 		
-	<div class="toolbar" id="resultsActions">
+	<div class="toolbar" id="resultsActions" style="padding-top: 10px;">
 		<button id="printBtn" class="secondary">Print / Save PDF</button>
 		<button id="exploreBtn" class="secondary">Explore Another Pathway</button>
 		</div>
@@ -452,6 +470,12 @@ qs('#workflow').classList.add('hidden');
 qs('#summary').classList.add('hidden');
 qs('#sec3Wrap').classList.add('hidden');
 
+  // NEW: also hide both support callouts for a clean results view
+  qs('#supportBox')?.classList.add('hidden');
+  qs('#supportBelow')?.classList.add('hidden');
+  qs('#introButtons')?.classList.add('hidden');
+
+	
 qs('#results').classList.remove('hidden');
 
 // Optional: scroll to Results
