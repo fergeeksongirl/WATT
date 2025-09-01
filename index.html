@@ -121,7 +121,8 @@
 <hr>
 		<br>
       <label for="path"><strong>Careers in Energy: </strong></label>
-      <select id="path" name="path" aria-describedby="landingHelp"></select>
+      <select id="path" name="path" aria-describedby="landingHelp" autocomplete="off"></select>
+
 	  <p>Use the drop-down menu to select a career pathway.</p>
 	  <p>Once a career is selected:&nbsp;</p>
 <ul>
@@ -554,6 +555,15 @@ function exploreAnother(){
   // NEW: restore support placement
   qs('#supportBelow')?.classList.add('hidden');
   qs('#supportBox')?.classList.remove('hidden');
+
+  // --- reset pathway selector to placeholder ---
+  const sel = document.getElementById('path');
+  if (sel) {
+    sel.selectedIndex = 0;           // back to placeholder
+    sel.value = "";                  // empty value
+    sel.dispatchEvent(new Event('change', { bubbles: true })); // update UI state
+  }
+  // ---------------------------------------------
 
   closeModal();
   document.getElementById('path').focus();
