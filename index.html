@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Career Pathways — All-in-one (Multipath v12)</title>
+<title>WATTs v12.7</title>
 <link rel="icon" href="/mnt/data/favicon.jpeg">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
@@ -56,6 +56,14 @@
     .container { padding:0; }
     .card { border:none; margin:0 0 10px 0; }
   }
+	
+/* Hide the stepper entirely */
+.stepper { display: none !important; }
+
+/* Hide the inline Next buttons in Sections 1 & 2 */
+#sec1Wrap .toolbar,
+#sec2Wrap .toolbar { display: none !important; }
+
 </style>
 </head>
 <body>
@@ -70,27 +78,44 @@
     <h1 id="pageTitle">WATTs • Interactive Skills Assessment</h1>
   </header>
 <!-- Always-visible support box ABOVE landing -->
-<section id="supportBox" class="card support" aria-label="Support">
-<div style="background-color:#F5F5F5; border-left:6px solid #333; padding:1em; margin:1.5em 0; font-family:Arial, sans-serif; color:#222;">
-  <h2 style="font-size:1.2em; margin-top:0;"><span style="color: #004080;"><i class="fa-solid fa-circle-question fa-xl"></i></span> We’re Here to Help</h2>
-  <p>If you have any questions or run into issues while completing the <strong>WATTs Assessment</strong>, contact the <strong>Creative Links </strong>team for support.</p>
-  <div style="text-align:right;">
-    <a href="mailto:pks@creativelinks.ca?subject=Support%20Request%20-%20WATTs%20App" 
-       style="display:inline-block; background-color:#004080; color:#FFF; padding:0.6em 1.2em; text-decoration:none; font-weight:bold; border-radius:4px; margin-top:0.5em;">
-       SUPPORT 🛟
-    </a>
-  </div>
-</div>
-</section>
+<section id="supportBox" class="card support" aria-label="Support" style="background-color:#F5F5F5; border-left:6px solid #333; padding:1em;">
+	  <h2 style="margin:0 0 6px 0; font-size:18px;"><span style="color: #004080;"><i class="fa-solid fa-circle-question fa-xl"></i></span> We’re Here to Help</h2>
+	  <p style="margin:0 0 8px 0;">If you have any questions or run into issues while completing the <strong>WATTs Assessment</strong>, contact the <strong>Creative Links </strong>team for support.</p>
+		<div style="text-align:right; margin-bottom:0.8em;">
+			<a href="mailto:pks@creativelinks.ca?subject=Support%20Request%20-%20WATTs%20App"
+		 style="display:inline-block; background-color:#004080; color:#FFF; padding:0.6em 1.2em; text-decoration:none; font-weight:bold; border-radius:4px; margin-top:0.5em;">
+		 SUPPORT 🛟
+			</a>
+		</div>
+	</section>
   <main id="main">
     <section id="landing" class="card" aria-labelledby="landingTitle">
-      <div class="step">Start — choose a pathway</div>
+      <div class="step">Career Pathways</div>
       <h2 id="landingTitle">Welcome</h2>
-      <p><em>Placeholder for your pre‑intro text.</em> This short overview will explain the purpose, how your answers are used, privacy notes, and what to expect.</p>
-      <hr>
-      <label for="path"><strong>Choose a pathway to begin:</strong></label>
+      <p>This <strong>Skills Assessment</strong> helps you reflect on your experience and identify opportunities to grow or transition within the energy sector.</p>
+      <p><strong>Purpose</strong>: <br>
+      Your responses are used to generate a personalized profile of your skills.&nbsp;</p>
+      <p><strong>Privacy</strong>: <br>
+      Results are for your use only and are not shared without your consent.&nbsp;</p>
+      <p><strong>What to Expect</strong>: <br>
+      You’ll answer questions about your knowledge and work experience. At the end, you can view, print, or save your results.</p>
+		<br>
+<hr>
+		<br>
+      <label for="path"><strong>Careers in Energy: </strong></label>
       <select id="path" name="path" aria-describedby="landingHelp"></select>
-      <p id="landingHelp" class="sr-only">After selecting a pathway, press Start Assessment to see the skills survey for that pathway.</p>
+	  <p>Use the drop-down menu to select a career pathway.</p>
+	  <p>Once a career is selected:&nbsp;</p>
+<ul>
+	    <li><strong>Start Assessment</strong> begin the Skills Assessment.</li>
+	    <li><strong>Pathway Overview</strong> learn more about that career before starting.</li>
+</ul>
+		<p><strong>Note</strong>: You must select a career before either button is activated.</p>
+<br>
+<hr>
+	  <br>
+	
+<p id="landingHelp" class="sr-only">After selecting a pathway, choose either Start Assessment to begin the Skills Assessment -or Pathway Overview to read about that career before starting.</p>
       <div class="toolbar" style="margin-top:10px">
         <button id="start" class="primary" disabled>Start Assessment</button>
         <button id="overviewBtn" class="secondary" aria-haspopup="dialog" aria-controls="modal" aria-expanded="false" disabled>Pathway Overview</button>
@@ -108,12 +133,24 @@
     </section>
 
     <section id="intro" class="card hidden" aria-labelledby="introTitle">
-      <h2 id="introTitle" class="sr-only">Survey — What &amp; How</h2>
+      <h2 id="introTitle" class="sr-only">Skills Assessment Survey</h2>
       <div class="toolbar">
         <button id="toS1" class="primary">Continue to Section 1</button>
         <button id="resetToLanding" class="secondary">Explore Another Pathway</button>
       </div>
     </section>
+	  
+<!-- place this immediately AFTER the #intro section -->
+	<section id="supportBelow" class="card support hidden" aria-label="Support" style="background-color:#F5F5F5; border-left:6px solid #333; padding:1em;">
+	  <h2 style="margin:0 0 6px 0; font-size:18px;"><span style="color: #004080;"><i class="fa-solid fa-circle-question fa-xl"></i></span> We’re Here to Help</h2>
+	  <p style="margin:0 0 8px 0;">If you have any questions or run into issues while completing the <strong>WATTs Assessment</strong>, contact the <strong>Creative Links </strong>team for support.</p>
+		<div style="text-align:right; margin-bottom:0.8em;">
+			<a href="mailto:pks@creativelinks.ca?subject=Support%20Request%20-%20WATTs%20App"
+		 style="display:inline-block; background-color:#004080; color:#FFF; padding:0.6em 1.2em; text-decoration:none; font-weight:bold; border-radius:4px; margin-top:0.5em;">
+		 SUPPORT 🛟
+			</a>
+		</div>
+	</section>
 
     <section id="survey" class="card hidden" aria-labelledby="surveyTitle" role="group">
       <h2 id="surveyTitle">—</h2>
@@ -161,7 +198,7 @@
 		<h2>Response Summary</h2>
 	  <label for="showResponses" style="display:flex; align-items:center; gap:.5rem;">
 		<input type="checkbox" id="showResponses" />
-		  <span> View your responses and include them with your results.</span>
+		  <span> View my responses with the results and include them when printing.</span>
 	  </label><br>
 			</div>
 		</div>
@@ -259,12 +296,15 @@ function setIntro(name){
     .replaceAll("{established}", i.established)
     .replaceAll("{emerging}", i.emerging);
 
+
   // NOTE: give the toolbar a stable id so we can hide it later
   qs('#intro').innerHTML = html + `
     <div id="introButtons" class="toolbar">
       <button id="toS1" class="primary">Continue to Section 1</button>
       <button id="resetToLanding" class="secondary">Explore Another Pathway</button>
     </div>`;
+
+
 
   // Wire the buttons after injecting the HTML
   qs('#toS1').addEventListener('click', ()=>{
@@ -275,10 +315,14 @@ function setIntro(name){
       tb.setAttribute('aria-hidden','true'); // a11y hint
     }
 
-    // 2) Reveal Section 1 and advance the stepper
-    qs('#sec1Wrap').classList.remove('hidden');
-    qs('#sec2Wrap').classList.add('hidden');
-    qs('#sec3Wrap').classList.add('hidden');
+	// Reveal the survey and all sections at once
+	qs('#survey').classList.remove('hidden');
+	['#sec1Wrap', '#sec2Wrap', '#sec3Wrap'].forEach(id => qs(id).classList.remove('hidden'));
+
+	// (optional) bring the survey into view for the user
+	const heading = qs('#surveyTitle');
+	if (heading?.scrollIntoView) heading.scrollIntoView({ behavior:'smooth', block:'start' });
+
     setStep(2);
 
     // 3) Move focus to the Section 1 heading (good for screen readers)
@@ -311,15 +355,20 @@ function renderSurvey(name){
   buildLikert(qs('#sec1'), 'core', d.core);
   buildLikert(qs('#sec2'), 'established', d.established);
   buildLikert(qs('#sec3'), 'emerging', d.emerging);
-  qs('#landing').classList.add('hidden');
-  qs('#workflow').classList.remove('hidden');
-  qs('#intro').classList.remove('hidden');
-  qs('#survey').classList.remove('hidden');
-  qs('#results').classList.add('hidden');
-  qs('#summary').classList.add('hidden');
-  qs('#sec1Wrap').classList.add('hidden');
-  qs('#sec2Wrap').classList.add('hidden');
-  qs('#sec3Wrap').classList.add('hidden');
+
+qs('#landing').classList.add('hidden');
+qs('#intro').classList.remove('hidden');
+
+qs('#survey').classList.add('hidden');    // keep hidden until user clicks Continue
+qs('#results').classList.add('hidden');
+qs('#summary').classList.add('hidden');
+
+/* Keep all sections hidden until the user clicks “Continue to Section 1” */
+['#sec1Wrap', '#sec2Wrap', '#sec3Wrap'].forEach(id => qs(id).classList.add('hidden'));
+
+
+/* We removed the stepper, so no setStep() here */
+
   setStep(1);
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -452,6 +501,10 @@ document.getElementById('start').addEventListener('click', ()=>{
   setIntro(name);
   renderSurvey(name);
   toggleOverviewButton();
+
+  // NEW: swap support location
+  qs('#supportBox')?.classList.add('hidden');     // hide the one above landing
+  qs('#supportBelow')?.classList.remove('hidden'); // show the one below Intro
 });
 
 document.getElementById('overviewBtn').addEventListener('click', ()=>{
@@ -473,6 +526,11 @@ function exploreAnother(){
   document.getElementById('survey').classList.add('hidden');
   document.getElementById('workflow').classList.add('hidden');
   document.getElementById('landing').classList.remove('hidden');
+
+  // NEW: restore support placement
+  qs('#supportBelow')?.classList.add('hidden');
+  qs('#supportBox')?.classList.remove('hidden');
+
   closeModal();
   document.getElementById('path').focus();
   window.scrollTo({top:0,behavior:'smooth'});
@@ -516,7 +574,7 @@ function toggleOverviewButton(){
   // Placeholder (default)
   const placeholder = document.createElement('option');
   placeholder.value = "";
-  placeholder.textContent = "<– Select Pathway –>";
+  placeholder.textContent = "select a career pathway";
   placeholder.selected = true;
   placeholder.disabled = true;
   pathSel.appendChild(placeholder);
