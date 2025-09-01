@@ -49,8 +49,9 @@
   th, td { border:1px solid var(--line); padding:6px 8px; text-align:left; vertical-align: top; }
   th { background:#f8fafc; }
   @media print {
-    header, .toolbar, .support, .notice, #landing, #intro + .card, #overviewBtn, #results, .stepper { display:none !important; }
-    #summary { display:block !important; border:none; }
+    header, .toolbar, .support, .notice, #landing, #intro + .card, #overviewBtn, .stepper { display:none !important; }
+  /* Results will remain visible for printing */
+  #summary { display:none !important; } /* ensure summary stays hidden per the new flow */
     body { margin:0; }
     .container { padding:0; }
     .card { border:none; margin:0 0 10px 0; }
@@ -71,7 +72,7 @@
 <!-- Always-visible support box ABOVE landing -->
 <section id="supportBox" class="card support" aria-label="Support">
 <div style="background-color:#F5F5F5; border-left:6px solid #333; padding:1em; margin:1.5em 0; font-family:Arial, sans-serif; color:#222;">
-  <h2 style="font-size:1.2em; margin-top:0;"><span style="color: Tomato;"><i class="fa-solid fa-circle-question fa-xl"></i></span> We’re Here to Help</h2>
+  <h2 style="font-size:1.2em; margin-top:0;"><span style="color: #004080;"><i class="fa-solid fa-circle-question fa-xl"></i></span> We’re Here to Help</h2>
   <p>If you have any questions or run into issues while completing the <strong>WATTs Assessment</strong>, contact the <strong>Creative Links </strong>team for support.</p>
   <div style="text-align:right;">
     <a href="mailto:pks@creativelinks.ca?subject=Support%20Request%20-%20WATTs%20App" 
@@ -80,7 +81,6 @@
     </a>
   </div>
 </div>
-
 </section>
   <main id="main">
     <section id="landing" class="card" aria-labelledby="landingTitle">
@@ -108,7 +108,7 @@
     </section>
 
     <section id="intro" class="card hidden" aria-labelledby="introTitle">
-      <h2 id="introTitle" class="sr-only">Survey — What & How</h2>
+      <h2 id="introTitle" class="sr-only">Survey — What &amp; How</h2>
       <div class="toolbar">
         <button id="toS1" class="primary">Continue to Section 1</button>
         <button id="resetToLanding" class="secondary">Explore Another Pathway</button>
@@ -138,8 +138,7 @@
         <h3 id="s3Title">Section 3 — Emerging</h3>
         <div id="sec3"></div>
         <div class="toolbar">
-          <button id="calc" class="primary">Calculate Results</button>
-          <button id="resetAnswers" class="secondary">Reset Answers</button>
+          <button id="calc" class="primary">Calculate Results</button>          
         </div>
       </section>
     </section>
@@ -155,7 +154,47 @@
       <p><strong>Primary Focus:</strong> <span id="focus">–</span></p>
       <p><strong>Recommendation:</strong> <span id="reco">–</span></p>
       <div id="upgrades" aria-label="Upgrade suggestions"></div>
-    </section>
+
+	<!-- Optional responses toggle -->
+	<div class="toolbar" id="respToggleWrap">
+		<div>
+		<h2>Response Summary</h2>
+	  <label for="showResponses" style="display:flex; align-items:center; gap:.5rem;">
+		<input type="checkbox" id="showResponses" />
+		  <span> View your responses and include them with your results.</span>
+	  </label><br>
+			</div>
+		</div>
+
+<!-- Where the response tables will render -->
+<div id="resultsResponses" class="card hidden" aria-live="polite"></div>
+
+		
+	<div class="toolbar" id="resultsActions">
+		<button id="printBtn" class="secondary">Print / Save PDF</button>
+		<button id="exploreBtn" class="secondary">Explore Another Pathway</button>
+		</div>
+
+<!-- Connect Box (CTA) -->
+	<div style="background-color:#E8F4FA; border-left:6px solid #007ACC; padding:1em; margin:1.5em 0; color:#222;">
+  <h2 style="font-size:1.2em; margin-top:0;"><span style="color: #004080;"><i class="fa-solid fa-circle-info fa-xl"></i></span> Curious about your career pathway in the energy sector?</h2>
+		 <p>Your results are just the beginning. <strong>Creative Links</strong> can help you apply them to discover new career pathways in the energy sector.Together, we can review your results and turn them into next steps and future opportunities.</p>		
+  <div>
+    <a href="mailto:pks@creativelinks.ca?subject=I%E2%80%99m%20Ready%20for%20WATTs%20Next!" 
+       style="display:inline-block; background-color:#004080; color:#FFF; padding:0.6em 1.2em; text-decoration:none; font-weight:bold; border-radius:4px; margin-top:0.5em;"><span aria-label="What’s Next?">WATTs Next?</span>  
+    </a>
+  </div>
+		<p>Use the <strong>WATT’s Next?</strong> button to email us today.</p>
+		<p style="margin-top:0.8em; font-size:0.95em; color:#222;">
+			<span style="color: #004080;"><i class="fa-solid fa-globe fa-lg"></i></span> 
+			Visit us online at <a href="https://creativelinks.ca" style="color:#004080; text-decoration:underline;">CreativeLinks.ca</a>  
+			</p>
+		<p style="margin-top:0.8em; font-size:0.95em; color:#222;">	
+			<span style="color: #004080;"><i class="fa-solid fa-link fa-lg"></i></span> 
+			Find email + LinkedIn details on our <a href="https://creativelinks.ca/ContactUs/" style="color:#004080; text-decoration:underline;">Contact Page</a>
+		</p>
+		</div>
+	  </section>
 
     <section id="summary" class="card hidden" aria-labelledby="summaryTitle">
       <h2 id="summaryTitle">Summary — <span id="sumPath">—</span></h2>
@@ -168,10 +207,9 @@
 
       <h3>Your Responses</h3>
       <div id="sumDetails"></div>
+	
 
       <div class="toolbar">
-        <button id="printBtn" class="secondary">Print / Save PDF</button>
-        <button id="exploreBtn" class="secondary">Explore Another Pathway</button>
         <button id="resetBtn" class="secondary">Reset Answers</button>
       </div>
       <p style="margin-top:12px;color:#64748b;font-size:12px">Build: 2025-08-31 04:03:07Z</p>
@@ -212,6 +250,7 @@ function setStep(n){
   });
 }
 
+// Replace your existing setIntro() with this:
 function setIntro(name){
   const i = INTRO[name];
   const html = INTRO_TMPL
@@ -219,9 +258,34 @@ function setIntro(name){
     .replaceAll("{core}", i.core)
     .replaceAll("{established}", i.established)
     .replaceAll("{emerging}", i.emerging);
-  qs('#intro').innerHTML = html + `<div class="toolbar"><button id="toS1" class="primary">Continue to Section 1</button> <button id="resetToLanding" class="secondary">Explore Another Pathway</button></div>`;
-  // Wire the new buttons after render
-  qs('#toS1').addEventListener('click', ()=>{ qs('#sec1Wrap').classList.remove('hidden'); qs('#sec2Wrap').classList.add('hidden'); qs('#sec3Wrap').classList.add('hidden'); setStep(2); window.scrollTo({top:qs('#sec1Wrap').offsetTop-20,behavior:'smooth'}); });
+
+  // NOTE: give the toolbar a stable id so we can hide it later
+  qs('#intro').innerHTML = html + `
+    <div id="introButtons" class="toolbar">
+      <button id="toS1" class="primary">Continue to Section 1</button>
+      <button id="resetToLanding" class="secondary">Explore Another Pathway</button>
+    </div>`;
+
+  // Wire the buttons after injecting the HTML
+  qs('#toS1').addEventListener('click', ()=>{
+    // 1) Hide the two intro buttons immediately
+    const tb = qs('#introButtons');
+    if (tb) {
+      tb.classList.add('hidden');          // hides the button bar
+      tb.setAttribute('aria-hidden','true'); // a11y hint
+    }
+
+    // 2) Reveal Section 1 and advance the stepper
+    qs('#sec1Wrap').classList.remove('hidden');
+    qs('#sec2Wrap').classList.add('hidden');
+    qs('#sec3Wrap').classList.add('hidden');
+    setStep(2);
+
+    // 3) Move focus to the Section 1 heading (good for screen readers)
+    const s1 = qs('#s1Title');
+    if (s1) s1.focus ? s1.focus() : window.scrollTo({ top: qs('#sec1Wrap').offsetTop - 20, behavior: 'smooth' });
+  });
+
   qs('#resetToLanding').addEventListener('click', exploreAnother);
 }
 
@@ -325,11 +389,28 @@ function computeResults(){
   qs('#sumDetails').innerHTML = sectionTable('Section 1 — Core / General', core)
     + sectionTable('Section 2 — Established', est)
     + sectionTable('Section 3 — Emerging', emg);
+	// Also build response tables into Results (hidden until toggled on)
+	const respHTML = sectionTable('Section 1 — Core / General', core)
+	  + sectionTable('Section 2 — Established', est)
+	  + sectionTable('Section 3 — Emerging', emg);
+	qs('#resultsResponses').innerHTML = respHTML;
 
-  qs('#results').classList.remove('hidden');
-  qs('#summary').classList.remove('hidden');
-  setStep(5);
-  return {name, ts};
+
+// Hide everything except Results
+qs('#intro').classList.add('hidden');
+qs('#survey').classList.add('hidden');
+qs('#workflow').classList.add('hidden');
+qs('#summary').classList.add('hidden');
+qs('#sec3Wrap').classList.add('hidden');
+
+qs('#results').classList.remove('hidden');
+
+// Optional: scroll to Results
+window.scrollTo({ top: qs('#results').offsetTop - 16, behavior: 'smooth' });
+
+// We’re not showing the stepper on results per spec, so no setStep(5)
+return {name, ts};
+
 }
 
 // Modal & a11y
@@ -350,6 +431,16 @@ function closeModal(){
   qs('#overviewBtn').setAttribute('aria-expanded','false');
   if(lastFocus) lastFocus.focus();
 }
+	
+// Toggle show/hide of responses under Results (and include in print)
+const respCb = document.getElementById('showResponses');
+if (respCb) {
+  respCb.addEventListener('change', (e)=>{
+    qs('#resultsResponses').classList.toggle('hidden', !e.target.checked);
+  });
+}
+
+	
 document.addEventListener('click', (e)=>{
   if(e.target && e.target.id==='closeModal') closeModal();
 });
@@ -402,7 +493,8 @@ function resetAnswers(){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 document.getElementById('resetBtn').addEventListener('click', resetAnswers);
-document.getElementById('resetAnswers').addEventListener('click', resetAnswers);
+const ra = document.getElementById('resetAnswers');
+if (ra) ra.addEventListener('click', resetAnswers);
 
 // Enable/disable Start + Overview based on selection
 function toggleOverviewButton(){
