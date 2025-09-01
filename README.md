@@ -9,4 +9,6 @@ This repo contains a single-page, client-side HTML app with all pathways include
 - License: MIT (CreativeLinks, 2025)
 - Deployment: GitHub Pages via GitHub Actions (`.github/workflows/pages.yml`)
 
+- https://fergeeksongirl.github.io/WATT/
+
 **Build:** 2025-08-31 14:14:28Z
